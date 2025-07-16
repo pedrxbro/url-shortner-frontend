@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const body = document.body;
+    if (darkMode) {
+      body.classList.add("dark-mode");
+      body.classList.remove("light-mode");
+    } else {
+      body.classList.add("light-mode");
+      body.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
 
   async function handleShorten() {
     setLoading(true);
@@ -33,47 +46,91 @@ export default function App() {
     }
   }
 
+  function handleCopy() {
+    navigator.clipboard.writeText(shortUrl);
+    alert("URL copiada para a área de transferência!");
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 flex items-center justify-center p-4">
-      <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-center text-blue-600 mb-6">
-          🔗 Encurtador de URL
-        </h1>
-
-        <input
-          type="text"
-          placeholder="Digite a URL longa"
-          className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          value={longUrl}
-          onChange={(e) => setLongUrl(e.target.value)}
-        />
-
-        <button
-          onClick={handleShorten}
-          disabled={loading || !longUrl}
-          className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-4 hover:bg-blue-700 disabled:opacity-50 transition"
+    <section className="section">
+      <div className="container">
+        <div
+          className="box"
+          style={{ maxWidth: "500px", margin: "auto" }}
         >
-          {loading ? "Encurtando..." : "Encurtar"}
-        </button>
+          <div className="is-flex is-justify-content-space-between is-align-items-center mb-4">
+            <h1 className="title">🔗 Encurtador de URL</h1>
 
-        {error && (
-          <p className="text-red-500 mt-4 text-center">{error}</p>
-        )}
-
-        {shortUrl && (
-          <div className="mt-6 bg-blue-50 p-4 rounded text-center">
-            <p className="text-gray-700">URL Encurtada:</p>
-            <a
-              href={shortUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-700 underline break-words"
-            >
-              {shortUrl}
-            </a>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={darkMode}
+                onChange={() => setDarkMode(!darkMode)}
+              />
+              <span className="check"></span>
+            </label>
           </div>
-        )}
+
+          <div className="field">
+            <div className="control">
+              <input
+                type="text"
+                placeholder="Digite a URL longa"
+                className="input"
+                value={longUrl}
+                onChange={(e) => setLongUrl(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="field">
+            <div className="control">
+              <button
+                onClick={handleShorten}
+                disabled={loading || !longUrl}
+                className={`button encurtar-btn is-fullwidth ${
+                  loading ? "is-loading" : ""
+                }`}
+              >
+                Encurtar
+              </button>
+            </div>
+          </div>
+
+          {error && (
+            <div className="notification is-danger is-light">{error}</div>
+          )}
+
+          {shortUrl && (
+            <div className="short-url mt-4">
+              <p className="has-text-centered">
+                URL Encurtada:{" "}
+                <a href={shortUrl} target="_blank" rel="noopener noreferrer">
+                  {shortUrl}
+                </a>
+              </p>
+
+              <div className="is-flex is-justify-content-center mt-2">
+                <button
+                  onClick={handleCopy}
+                  className="button is-small is-info mr-2"
+                >
+                  📋 Copiar
+                </button>
+
+                <a
+                  href={shortUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button is-small is-link"
+                >
+                  🔗 Abrir
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
