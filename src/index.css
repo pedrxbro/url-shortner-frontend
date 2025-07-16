@@ -59,7 +59,8 @@ input:checked + .check:before {
   transform: translateX(20px);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -101,7 +102,7 @@ body.dark-mode .encurtar-btn {
 
 body.dark-mode .encurtar-btn:hover {
   background-color: #0e234f;
-  color: white; /* texto branco no hover */
+  color: white;
 }
 
 body.light-mode .short-url {
@@ -118,4 +119,8 @@ body.dark-mode .short-url {
   border-left: 5px solid #2196f3;
   padding: 10px;
   border-radius: 4px;
+}
+
+.has-text-success {
+  font-weight: bold;
 }

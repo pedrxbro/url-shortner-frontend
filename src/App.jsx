@@ -4,9 +4,11 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   const [longUrl, setLongUrl] = useState("");
+  const [expiration, setExpiration] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const body = document.body;
@@ -23,6 +25,7 @@ export default function App() {
     setLoading(true);
     setError(null);
     setShortUrl("");
+    setCopied(false);
 
     try {
       const response = await fetch("http://localhost:8080/shorten-url", {
@@ -30,7 +33,7 @@ export default function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: longUrl }),
+        body: JSON.stringify({ url: longUrl, expiration: expiration || null }),
       });
 
       if (!response.ok) {
@@ -47,17 +50,16 @@ export default function App() {
   }
 
   function handleCopy() {
+    if (!shortUrl) return;
     navigator.clipboard.writeText(shortUrl);
-    alert("URL copiada para a área de transferência!");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   }
 
   return (
     <section className="section">
       <div className="container">
-        <div
-          className="box"
-          style={{ maxWidth: "500px", margin: "auto" }}
-        >
+        <div className="box" style={{ maxWidth: "500px", margin: "auto" }}>
           <div className="is-flex is-justify-content-space-between is-align-items-center mb-4">
             <h1 className="title">🔗 Encurtador de URL</h1>
 
@@ -80,6 +82,20 @@ export default function App() {
                 value={longUrl}
                 onChange={(e) => setLongUrl(e.target.value)}
               />
+            </div>
+          </div>
+
+          <div className="field">
+            <div className="control">
+              <input
+                type="datetime-local"
+                className="input"
+                value={expiration}
+                onChange={(e) => setExpiration(e.target.value)}
+              />
+              <p className="help">
+                Opcional: selecione a data e hora de expiração da URL.
+              </p>
             </div>
           </div>
 
@@ -115,7 +131,7 @@ export default function App() {
                   onClick={handleCopy}
                   className="button is-small is-info mr-2"
                 >
-                  📋 Copiar
+                  📋 {copied ? "Copiado!" : "Copiar"}
                 </button>
 
                 <a
