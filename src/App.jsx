@@ -129,7 +129,9 @@ export default function App() {
               <div className="is-flex is-justify-content-center mt-2">
                 <button
                   onClick={handleCopy}
-                  className="button is-small is-info mr-2"
+                  className={`button is-small copiar-btn mr-2 ${
+                    darkMode ? "dark" : "light"
+                  }`}
                 >
                   📋 {copied ? "Copiado!" : "Copiar"}
                 </button>
@@ -138,7 +140,9 @@ export default function App() {
                   href={shortUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="button is-small is-link"
+                  className={`button is-small abrir-btn ${
+                    darkMode ? "dark" : "light"
+                  }`}
                 >
                   🔗 Abrir
                 </a>

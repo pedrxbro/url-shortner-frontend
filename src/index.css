@@ -1,3 +1,4 @@
+/* === TEMAS === */
 body.light-mode {
   background-color: #f29027;
   color: #333;
@@ -8,12 +9,132 @@ body.dark-mode {
   color: #f0f0f0;
 }
 
+/* === ELEMENTOS BÁSICOS === */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
 .box {
   background-color: inherit;
   color: inherit;
 }
 
-/* Switch bonito */
+/* === CAIXA === */
+body.light-mode .box {
+  background-color: #f7c574;
+  color: #333;
+  border: 1px solid #e0e0e0;
+}
+
+body.dark-mode .box {
+  background-color: #92bde8;
+  color: #f0f0f0;
+  border: none;
+}
+
+/* === INPUTS === */
+body.light-mode input,
+body.dark-mode input,
+body.light-mode textarea,
+body.dark-mode textarea {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* Placeholders sempre pretos */
+body.light-mode input::placeholder,
+body.dark-mode input::placeholder {
+  color: #000000;
+  opacity: 1;
+}
+
+/* === TÍTULO === */
+body.light-mode .title {
+  color: #3d403d;
+}
+
+body.dark-mode .title {
+  color: #f0f0f0;
+}
+
+/* === BOTÃO PRINCIPAL (ENCURTAR) === */
+body.light-mode .encurtar-btn {
+  background-color: #fccd81;
+  color: white;
+  border: none;
+}
+
+body.light-mode .encurtar-btn:hover {
+  background-color: #e07c13;
+}
+
+body.dark-mode .encurtar-btn {
+  background-color: #c0ddfa;
+  color: #000;
+  border: none;
+}
+
+body.dark-mode .encurtar-btn:hover {
+  background-color: #0e234f;
+  color: white;
+}
+
+/* === BOTÕES COPIAR / ABRIR === */
+body.light-mode .copiar-btn,
+body.light-mode .abrir-btn {
+  background-color: #f29027;
+  color: white;
+  border: none;
+}
+
+body.light-mode .copiar-btn:hover,
+body.light-mode .abrir-btn:hover {
+  background-color: #e07c13;
+}
+
+body.dark-mode .copiar-btn,
+body.dark-mode .abrir-btn {
+  background-color: #2196f3;
+  color: #000;
+  border: none;
+}
+
+body.dark-mode .copiar-btn:hover,
+body.dark-mode .abrir-btn:hover {
+  background-color: #0e234f;
+  color: #ffffff;
+}
+
+/* === SHORT URL BOX === */
+body.light-mode .short-url {
+  background-color: #ffe3c1;
+  color: #333;
+  border-left: 5px solid #f29027;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+body.dark-mode .short-url {
+  background-color: #a5ccf7;
+  color: #f0f0f0;
+  border-left: 5px solid #2196f3;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* === SWITCH TOGGLE === */
 .switch {
   position: relative;
   display: inline-block;
@@ -52,75 +173,14 @@ body.dark-mode {
 }
 
 input:checked + .check {
-  background-color: #2196F3; /* azul para ON */
+  background-color: #2196f3;
 }
 
 input:checked + .check:before {
   transform: translateX(20px);
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.section {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-}
-
-body.light-mode .box {
-  background-color: #f7c574;
-  color: #333;
-  border: 1px solid #e0e0e0;
-}
-
-body.dark-mode .box {
-  background-color: #92bde8;
-  color: #f0f0f0;
-  border: none;
-}
-
-body.light-mode .encurtar-btn {
-  background-color: #fccd81;
-  color: white;
-  border: none;
-}
-
-body.light-mode .encurtar-btn:hover {
-  background-color: #e07c13;
-}
-
-body.dark-mode .encurtar-btn {
-  background-color: #c0ddfa;
-  color: #000;
-  border: none;
-}
-
-body.dark-mode .encurtar-btn:hover {
-  background-color: #0e234f;
-  color: white;
-}
-
-body.light-mode .short-url {
-  background-color: #ffe3c1;
-  color: #333;
-  border-left: 5px solid #f29027;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-body.dark-mode .short-url {
-  background-color: #a5ccf7;
-  color: #f0f0f0;
-  border-left: 5px solid #2196f3;
-  padding: 10px;
-  border-radius: 4px;
-}
-
+/* === EXTRA === */
 .has-text-success {
   font-weight: bold;
 }
