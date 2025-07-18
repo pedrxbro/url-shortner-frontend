@@ -40,13 +40,11 @@ export default function App() {
       }
 
       let shortCode = await response.text();
-      
+
       try {
         const url = new URL(shortCode);
         shortCode = url.pathname.replace('/', '');
-      }
-      catch {
-        // Se shortCode não for uma URL válida, assume que é um código curto
+      } catch {
         console.error("Url Inválida");
       }
       setShortUrl(`${window.location.origin}/${shortCode}`);
@@ -58,9 +56,37 @@ export default function App() {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText(shortUrl);
-    setCopyMsg("URL copiada para a área de transferência!");
-    setTimeout(() => setCopyMsg(""), 3000);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shortUrl)
+        .then(() => {
+          setCopyMsg("copied");
+          setTimeout(() => setCopyMsg(""), 3000);
+        })
+        .catch(() => {
+          setError("Não foi possível copiar a URL para a área de transferência.");
+        });
+    } else {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = shortUrl;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        if (successful) {
+          setCopyMsg("copied");
+          setTimeout(() => setCopyMsg(""), 3000);
+        } else {
+          setError("Falha ao copiar a URL.");
+        }
+      } catch {
+        setError("Erro ao copiar a URL.");
+      }
+    }
   }
 
   return (
@@ -138,7 +164,7 @@ export default function App() {
                     darkMode ? "is-info" : "is-link"
                   } mr-2`}
                 >
-                  📋 Copiar
+                  {copyMsg === "copied" ? "📋 Copiado!" : "📋 Copiar"}
                 </button>
 
                 <a
@@ -152,15 +178,6 @@ export default function App() {
                   🔗 Abrir
                 </a>
               </div>
-              {copyMsg && (
-                <p
-                  className={`has-text-centered mt-2 ${
-                    darkMode ? "has-text-info" : "has-text-link"
-                  }`}
-                >
-                  {copyMsg}
-                </p>
-              )}
             </div>
           )}
         </div>
