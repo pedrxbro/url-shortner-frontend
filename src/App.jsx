@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
-
   const [longUrl, setLongUrl] = useState("");
   const [expiration, setExpiration] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [copyMsg, setCopyMsg] = useState("");
 
   useEffect(() => {
     const body = document.body;
@@ -25,10 +24,10 @@ export default function App() {
     setLoading(true);
     setError(null);
     setShortUrl("");
-    setCopied(false);
+    setCopyMsg("");
 
     try {
-      const response = await fetch("http://localhost:8080/shorten-url", {
+      const response = await fetch("/shorten-url", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,8 +39,17 @@ export default function App() {
         throw new Error("Erro na requisição");
       }
 
-      const text = await response.text();
-      setShortUrl(text);
+      let shortCode = await response.text();
+      
+      try {
+        const url = new URL(shortCode);
+        shortCode = url.pathname.replace('/', '');
+      }
+      catch {
+        // Se shortCode não for uma URL válida, assume que é um código curto
+        console.error("Url Inválida");
+      }
+      setShortUrl(`${window.location.origin}/${shortCode}`);
     } catch (err) {
       setError("Falha ao encurtar URL: " + err.message);
     } finally {
@@ -50,10 +58,9 @@ export default function App() {
   }
 
   function handleCopy() {
-    if (!shortUrl) return;
     navigator.clipboard.writeText(shortUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setCopyMsg("URL copiada para a área de transferência!");
+    setTimeout(() => setCopyMsg(""), 3000);
   }
 
   return (
@@ -86,6 +93,7 @@ export default function App() {
           </div>
 
           <div className="field">
+            <label className="label">Data e hora de expiração (opcional)</label>
             <div className="control">
               <input
                 type="datetime-local"
@@ -93,9 +101,6 @@ export default function App() {
                 value={expiration}
                 onChange={(e) => setExpiration(e.target.value)}
               />
-              <p className="help">
-                Opcional: selecione a data e hora de expiração da URL.
-              </p>
             </div>
           </div>
 
@@ -129,24 +134,33 @@ export default function App() {
               <div className="is-flex is-justify-content-center mt-2">
                 <button
                   onClick={handleCopy}
-                  className={`button is-small copiar-btn mr-2 ${
-                    darkMode ? "dark" : "light"
-                  }`}
+                  className={`button is-small ${
+                    darkMode ? "is-info" : "is-link"
+                  } mr-2`}
                 >
-                  📋 {copied ? "Copiado!" : "Copiar"}
+                  📋 Copiar
                 </button>
 
                 <a
                   href={shortUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`button is-small abrir-btn ${
-                    darkMode ? "dark" : "light"
+                  className={`button is-small ${
+                    darkMode ? "is-info" : "is-link"
                   }`}
                 >
                   🔗 Abrir
                 </a>
               </div>
+              {copyMsg && (
+                <p
+                  className={`has-text-centered mt-2 ${
+                    darkMode ? "has-text-info" : "has-text-link"
+                  }`}
+                >
+                  {copyMsg}
+                </p>
+              )}
             </div>
           )}
         </div>
